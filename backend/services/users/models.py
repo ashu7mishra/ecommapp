@@ -4,4 +4,4 @@ from django.db import models
 class User(models.Model):
     username = models.CharField(max_length=100, null=False)
     email = models.EmailField(max_length=100, null=False)
-    is_varified = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
