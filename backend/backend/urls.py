@@ -1,5 +1,5 @@
 """
-URL configuration for ecommapp project.
+URL configuration for backend project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
@@ -16,12 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from ecommapp.views import ListCreateProductAPIView, DairyListCreateAPIView, DairyRetrieveUpdateDestroyAPIView
-
 
 urlpatterns = [
-       path('', ListCreateProductAPIView.as_view()),
-       path('dairy/', DairyListCreateAPIView.as_view()),
-       path('dairy/<int:pk>/', DairyRetrieveUpdateDestroyAPIView.as_view()),
-       path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
 ]
