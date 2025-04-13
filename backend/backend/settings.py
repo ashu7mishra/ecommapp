@@ -89,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ecommdb',       # 👈 your DB name
         'USER': 'postgres',          # 👈 default PostgreSQL user
-        'PASSWORD': 'your_password', # 👈 the one you set during install
+        'PASSWORD': 'Ashu@1993', # 👈 the one you set during install
         'HOST': 'localhost',
         'PORT': '5432',
     }
