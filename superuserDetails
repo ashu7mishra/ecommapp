@@ -8,3 +8,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+Username: user123
+Email: user123@gmail.com
+Password: user123
