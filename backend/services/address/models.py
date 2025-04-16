@@ -9,4 +9,5 @@ class Address(models.Model):
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     pincode = models.CharField(max_length=10)
+    country = models.CharField(max_length=100, null=True)
     is_default = models.BooleanField(default=False)

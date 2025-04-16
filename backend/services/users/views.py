@@ -1,17 +1,18 @@
 from django.shortcuts import render
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import NotFound
 
 User = get_user_model()
 
 class UserListCreateAPIView(ListCreateAPIView):
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     
     def get_queryset(self):
         user = self.request.user
@@ -28,6 +29,15 @@ class UserRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     
     def get_object(self):
+        user_id = self.kwargs.get('id')
+        
+        if user_id:
+            try:
+                # Retrieve user by ID from the URL
+                return User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                raise NotFound(detail="User not found")
+            # Return the current authenticated user
         return self.request.user
     
     def delete(self, request, *args, **kwargs):
