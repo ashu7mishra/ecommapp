@@ -30,7 +30,6 @@ class UserRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     
     def get_object(self):
         user_id = self.kwargs.get('id')
-        
         if user_id:
             try:
                 # Retrieve user by ID from the URL
