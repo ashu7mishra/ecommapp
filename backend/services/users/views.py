@@ -29,6 +29,7 @@ class UserRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     
     def get_object(self):
+        
         user_id = self.kwargs.get('id')
         if user_id:
             try:
