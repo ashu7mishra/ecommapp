@@ -1,0 +1,27 @@
+.signup-wrapper {
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    align-items: center;  /* Vertical center */
+    justify-content: center; /* Horizontal center */
+    background-color: #e9e0f5; /* optional */
+  }
+
+.signup-form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    max-width: 400px;
+    margin: auto;
+    gap: 10px;
+    padding: 20px;
+    border: 1px solid #300808;
+    border-radius: 8px;
+  }
+  
+  .signup-error {
+    color: red;
+  }
+  
+  .signup-success {
+    color: green;
+  }
