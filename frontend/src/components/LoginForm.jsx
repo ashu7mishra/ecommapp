@@ -6,13 +6,15 @@ export default function LoginForm({onLogin}) {
     const [form, setForm] = useState({username:"", password:""})
     const [error, setError] = useState("");
 
-    const handleChange = (e) => setForm({
+    const handleChange = (e) => {
+        setForm({
         ...form, [e.target.name]: e.target.value
-    });
+        })
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError();
+        setError("");
 
         try {
             const res = await api.post("token/", form);
@@ -26,6 +28,7 @@ export default function LoginForm({onLogin}) {
         } catch (err) {
             setError("Invalid credentials");
         }
+        console.log("Login form data:", form);
     };
 
     return (
@@ -49,6 +52,7 @@ export default function LoginForm({onLogin}) {
                 required
             />
             <button type="submit">Login</button>
+            
         </form>
     )
 }

@@ -26,7 +26,7 @@ export default function UserInfo({ onLogout }) {
                 <>
                     <h2>Welcome, {user.username}!!! </h2>
                     <p>Email: {user.email} </p>
-                    <button onClick={handleLogout}></button>
+                    <button onClick={handleLogout}>Logout</button>
                 </>
             ) : (
                 <p>Loading...</p>
