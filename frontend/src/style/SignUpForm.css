@@ -1,9 +1,9 @@
 .signup-wrapper {
-    height: 100vh; /* Full viewport height */
+    height: 40vh; /* Full viewport height */
     display: flex;
     align-items: center;  /* Vertical center */
     justify-content: center; /* Horizontal center */
-    background-color: #e9e0f5; /* optional */
+    /*background-color: #e9e0f5; /* optional */
   }
 
 .signup-form {
