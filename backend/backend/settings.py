@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'services.product',
     'services.cart',
     'services.order',
-    'services.orderItems',
     'services.notification',
     'services.inventory',
     'services.payment',
