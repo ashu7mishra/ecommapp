@@ -31,6 +31,8 @@ urlpatterns = [
     path('api/product/', include('services.product.urls')),
     path('api/cart/', include('services.cart.urls')),
     path('api/order/', include('services.order.urls')),
+    path('api/inventory/', include('services.inventory.urls')),
+    path('api/notification/', include('services.notification.urls')),
 ]
 
 
