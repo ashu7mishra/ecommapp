@@ -11,7 +11,7 @@ class Payment(models.Model):
     payment_method = models.CharField(max_length=50)
     status = models.CharField(max_length=30, choices=[
         ('pending', 'Pending'),
-        ('completed', 'Completed')
+        ('completed', 'Completed'),
         ('failed', 'Failed')
     ])
     created_at = models.DateTimeField(auto_now_add=True)
