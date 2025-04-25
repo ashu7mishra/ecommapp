@@ -5,6 +5,9 @@ from .models import Payment
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = "__all__"
+        fields = [
+            "id", "order", "amount", "payment_method", "status", 
+            "created_at", "razorpay_order_id", "razorpay_payment_id", "razorpay_signature"
+        ]
         read_only_fields = ["user"]
         
