@@ -1,2 +1,0 @@
-from createRazorpayOrderView import CreateRazorpayOrderView
-from paymentCreateApiView import PaymentCreateAPIView
