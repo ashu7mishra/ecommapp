@@ -166,3 +166,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+RAZORPAY_API_KEY = "rzp_test_vMz3NQVRItTIgx"
+RAZORPAY_API_SECRET = "pY5GzpDMB9TLyI9kUE8mm63B"
