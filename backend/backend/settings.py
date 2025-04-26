@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -167,5 +168,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 
-RAZORPAY_API_KEY = "rzp_test_vMz3NQVRItTIgx"
-RAZORPAY_API_SECRET = "pY5GzpDMB9TLyI9kUE8mm63B"
+RAZORPAY_API_KEY = config('RAZORPAY_KEY_ID')
+RAZORPAY_API_SECRET = config('RAZORPAY_KEY_SECRET')
