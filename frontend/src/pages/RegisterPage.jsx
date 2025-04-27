@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
+    email: '',
   });
 
   const handleChange = (e) => {
@@ -17,20 +18,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:8000/api/token/', formData);
-      localStorage.setItem('token', res.data.access); // Save JWT token
-      toast.success('Login successful! 🎉');
-      navigate('/dashboard');
+      await axios.post('http://localhost:8000/api/users/', formData);
+      toast.success('Registration successful! 🎉 Please login');
+      navigate('/login');
     } catch (err) {
       console.error(err);
-      toast.error('Invalid credentials 😔');
+      toast.error('Registration failed 🚫');
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-green-400 via-blue-500 to-purple-600">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Login to Your Account</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Create an Account</h2>
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block mb-1 font-semibold text-gray-600">Username</label>
@@ -40,7 +40,18 @@ const Login = () => {
               required
               value={formData.username}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 font-semibold text-gray-600">Email</label>
+            <input
+              type="email"
+              name="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>
           <div>
@@ -51,23 +62,23 @@ const Login = () => {
               required
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition duration-300"
+            className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300"
           >
-            Login
+            Register
           </button>
         </form>
         <p className="mt-4 text-sm text-center text-gray-600">
-          Don't have an account?{' '}
+          Already have an account?{' '}
           <span
-            onClick={() => navigate('/register')}
-            className="text-indigo-500 hover:underline cursor-pointer"
+            onClick={() => navigate('/login')}
+            className="text-green-500 hover:underline cursor-pointer"
           >
-            Sign Up
+            Login
           </span>
         </p>
       </div>
@@ -75,4 +86,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
