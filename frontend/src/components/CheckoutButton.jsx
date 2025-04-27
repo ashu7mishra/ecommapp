@@ -13,7 +13,7 @@ export default function CheckoutButton({ amount }) {
             // open razorpay checkout
             const options = {
 
-                key: import.env.VITE_RAZORPAY_KEY_ID,
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID,
                 amount: amount*100,
                 currency: "INR",
                 name: "EcommApp",

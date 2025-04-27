@@ -12,10 +12,18 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # load immediately after importing dotenv
+
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(os.path.join(BASE_DIR, '.env'))  # Make sure BASE_DIR is already defined
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,6 +34,15 @@ SECRET_KEY = 'django-insecure-3)nd1my5vn#=()$xch+9a+pgb=h%q%2*wdbq*@2*wzhp1fs_ce
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+# RAZORPAY_API_KEY = config('RAZORPAY_KEY_ID')
+# RAZORPAY_API_SECRET = config('RAZORPAY_KEY_SECRET')
+
+RAZORPAY_API_KEY = "rzp_test_vMz3NQVRItTIgx"
+RAZORPAY_API_SECRET = "pY5GzpDMB9TLyI9kUE8mm63B"
+
+print("RAZORPAY_API_KEY:", RAZORPAY_API_KEY)
+print("RAZORPAY_API_SECRET:", RAZORPAY_API_SECRET)
 
 ALLOWED_HOSTS = []
 
@@ -168,5 +185,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 
-RAZORPAY_API_KEY = config('RAZORPAY_KEY_ID')
-RAZORPAY_API_SECRET = config('RAZORPAY_KEY_SECRET')
+
