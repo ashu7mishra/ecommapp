@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { fetchProducts, createProduct, fetchCategories } from '../api/products'; // ⬅️ updated
+import { fetchProducts, createProduct, fetchCategories, updateProduct, deleteProduct } from '../api/products';
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -13,9 +14,10 @@ function DashboardPage() {
     name: '',
     description: '',
     price: '',
-    category: '', // New field
+    category: '',
   });
 
+  const [editingProduct, setEditingProduct] = useState(null);
   const [addingProduct, setAddingProduct] = useState(false);
 
   const isAdmin = localStorage.getItem('is_superuser') === 'true';
@@ -59,21 +61,59 @@ function DashboardPage() {
       const payload = {
         ...newProduct,
         price: parseFloat(newProduct.price),
-        category: parseInt(newProduct.category), // pass category ID
+        category: parseInt(newProduct.category),
       };
       await createProduct(payload);
       setNewProduct({ name: '', description: '', price: '', category: '' });
       await loadProducts();
+      toast.success('Product added successfully!');
     } catch (error) {
       console.error('Error adding product:', error);
+      toast.error('Something went wrong. Please try again!');
     } finally {
       setAddingProduct(false);
+    }
+  };
+
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+  };
+
+  const handleUpdateProduct = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        ...editingProduct,
+        price: parseFloat(editingProduct.price),
+        category: parseInt(editingProduct.category),
+      };
+      await updateProduct(editingProduct.id, payload);
+      setEditingProduct(null);
+      await loadProducts();
+      toast.success('Product updated successfully!');
+    } catch (error) {
+      console.error('Error updating product:', error);
+      toast.error('Something went wrong. Please try again!');
+    }
+  };
+
+  const handleDeleteProduct = async (id) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      try {
+        await deleteProduct(id);
+        await loadProducts();
+        toast.success('Product deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        toast.error('Something went wrong. Please try again!');
+      }
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="flex-grow p-10">
         <h1 className="text-3xl font-bold text-blue-700 mb-6">Dashboard</h1>
         <p className="text-gray-600 mb-10">
@@ -165,13 +205,94 @@ function DashboardPage() {
                       <p className="text-green-600 font-bold text-lg mb-4">
                         ₹{product.price}
                       </p>
-                      <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl">
-                        Buy Now
-                      </button>
+
+                      {isAdmin ? (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleEditProduct(product)}
+                            className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded-lg"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteProduct(product.id)}
+                            className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded-lg"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      ) : (
+                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl">
+                          Buy Now
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Edit Product Modal */}
+        {editingProduct && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+            <div className="bg-white rounded-lg p-6 w-96 shadow-lg relative">
+              <h2 className="text-xl font-bold mb-4">Edit Product</h2>
+              <form onSubmit={handleUpdateProduct} className="space-y-4">
+                <input
+                  type="text"
+                  value={editingProduct.name}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
+                  className="w-full p-2 border rounded-lg"
+                  placeholder="Product Name"
+                  required
+                />
+                <textarea
+                  value={editingProduct.description}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
+                  className="w-full p-2 border rounded-lg"
+                  placeholder="Description"
+                  required
+                />
+                <input
+                  type="number"
+                  value={editingProduct.price}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })}
+                  className="w-full p-2 border rounded-lg"
+                  placeholder="Price"
+                  required
+                />
+                <select
+                  value={editingProduct.category}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="flex justify-end gap-2 mt-4">
+                  <button
+                    type="button"
+                    onClick={() => setEditingProduct(null)}
+                    className="bg-gray-300 hover:bg-gray-400 text-black py-1 px-3 rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded-lg"
+                  >
+                    Update
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}
