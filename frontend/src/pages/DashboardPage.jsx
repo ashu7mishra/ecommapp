@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { fetchProducts, createProduct, fetchCategories, updateProduct, deleteProduct } from '../api/products';
+import Spinner from '../components/Spinner';
+import {
+  fetchProducts,
+  createProduct,
+  fetchCategories,
+  updateProduct,
+  deleteProduct
+} from '../api/products';
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -19,6 +26,8 @@ function DashboardPage() {
 
   const [editingProduct, setEditingProduct] = useState(null);
   const [addingProduct, setAddingProduct] = useState(false);
+  const [updatingProductId, setUpdatingProductId] = useState(null);
+  const [deletingProductId, setDeletingProductId] = useState(null);
 
   const isAdmin = localStorage.getItem('is_superuser') === 'true';
 
@@ -28,14 +37,13 @@ function DashboardPage() {
       navigate('/login');
     } else {
       loadProducts();
-      if (isAdmin) {
-        loadCategories();
-      }
+      if (isAdmin) loadCategories();
     }
   }, [navigate, isAdmin]);
 
   const loadProducts = async () => {
     try {
+      setLoading(true);
       const data = await fetchProducts();
       setProducts(data);
     } catch (error) {
@@ -82,6 +90,7 @@ function DashboardPage() {
   const handleUpdateProduct = async (e) => {
     e.preventDefault();
     try {
+      setUpdatingProductId(editingProduct.id);
       const payload = {
         ...editingProduct,
         price: parseFloat(editingProduct.price),
@@ -94,18 +103,23 @@ function DashboardPage() {
     } catch (error) {
       console.error('Error updating product:', error);
       toast.error('Something went wrong. Please try again!');
+    } finally {
+      setUpdatingProductId(null);
     }
   };
 
   const handleDeleteProduct = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
+        setDeletingProductId(id);
         await deleteProduct(id);
         await loadProducts();
         toast.success('Product deleted successfully!');
       } catch (error) {
         console.error('Error deleting product:', error);
         toast.error('Something went wrong. Please try again!');
+      } finally {
+        setDeletingProductId(null);
       }
     }
   };
@@ -155,7 +169,6 @@ function DashboardPage() {
                 />
               </div>
 
-              {/* Category Dropdown */}
               <div>
                 <label className="block mb-1 font-semibold">Category</label>
                 <select
@@ -186,7 +199,7 @@ function DashboardPage() {
 
         {/* Product List */}
         {loading ? (
-          <div className="text-center text-lg text-gray-500">Loading products...</div>
+          <Spinner />
         ) : (
           <div>
             <h2 className="text-2xl font-bold mb-6 text-green-700">Available Products</h2>
@@ -217,8 +230,9 @@ function DashboardPage() {
                           <button
                             onClick={() => handleDeleteProduct(product.id)}
                             className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded-lg"
+                            disabled={deletingProductId === product.id}
                           >
-                            Delete
+                            {deletingProductId === product.id ? 'Deleting...' : 'Delete'}
                           </button>
                         </div>
                       ) : (
@@ -287,9 +301,10 @@ function DashboardPage() {
                   </button>
                   <button
                     type="submit"
+                    disabled={updatingProductId === editingProduct.id}
                     className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded-lg"
                   >
-                    Update
+                    {updatingProductId === editingProduct.id ? 'Updating...' : 'Update'}
                   </button>
                 </div>
               </form>
