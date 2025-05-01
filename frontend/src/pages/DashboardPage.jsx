@@ -17,6 +17,7 @@ function DashboardPage() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
@@ -146,7 +147,6 @@ function DashboardPage() {
       <div className="flex-grow p-10">
         <h1 className="text-3xl font-bold text-blue-700 mb-6">Dashboard</h1>
 
-        {/* User Info */}
         {user && (
           <div className="mb-6 bg-white rounded-xl p-4 shadow-sm border">
             <h2 className="text-xl font-semibold text-gray-700 mb-1">Welcome, {user.username}!</h2>
@@ -159,7 +159,6 @@ function DashboardPage() {
           Welcome to your dashboard. Here you can manage your orders, profile, and more!
         </p>
 
-        {/* Admin Product Create Section */}
         {isAdmin && (
           <div className="bg-white shadow-md rounded-2xl p-6 mb-10">
             <h2 className="text-2xl font-bold text-green-700 mb-4">Add New Product</h2>
@@ -209,7 +208,6 @@ function DashboardPage() {
                   ))}
                 </select>
               </div>
-
               <button
                 type="submit"
                 disabled={addingProduct}
@@ -221,58 +219,88 @@ function DashboardPage() {
           </div>
         )}
 
+        {/* Category Filter */}
+        {categories.length > 0 && (
+          <div className="mb-6">
+            <label className="font-semibold text-gray-700 mr-2">Filter by Category:</label>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="p-2 border rounded-lg"
+            >
+              <option value="All">All</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         {/* Product List */}
         {loading ? (
           <Spinner />
         ) : (
           <div>
             <h2 className="text-2xl font-bold mb-6 text-green-700">Available Products</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.length === 0 ? (
-                <div className="text-gray-500 col-span-full text-center">No products available</div>
-              ) : (
-                products.map((product) => (
-                  <div
-                    key={product.id}
-                    className="bg-white shadow-md rounded-2xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                  >
-                    <div className="p-5">
-                      <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-                      <p className="text-gray-600 mb-3">{product.description}</p>
-                      <p className="text-green-600 font-bold text-lg mb-4">
-                        ₹{product.price}
-                      </p>
-
-                      {isAdmin ? (
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleEditProduct(product)}
-                            className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded-lg"
-                          >
-                            Edit
+            {Object.entries(
+              products
+                .filter((product) =>
+                  selectedCategory === 'All'
+                    ? true
+                    : product.category?.name === selectedCategory
+                )
+                .reduce((acc, product) => {
+                  const category = product.category?.name || 'Uncategorized';
+                  if (!acc[category]) acc[category] = [];
+                  acc[category].push(product);
+                  return acc;
+                }, {})
+            ).map(([categoryName, items]) => (
+              <div key={categoryName} className="mb-10">
+                <h3 className="text-xl font-bold text-blue-700 mb-4">{categoryName}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {items.map((product) => (
+                    <div
+                      key={product.id}
+                      className="bg-white shadow-md rounded-2xl overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                    >
+                      <div className="p-5">
+                        <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+                        <p className="text-gray-600 mb-3">{product.description}</p>
+                        <p className="text-green-600 font-bold text-lg mb-4">₹{product.price}</p>
+                        {isAdmin ? (
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleEditProduct(product)}
+                              className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded-lg"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDeleteProduct(product.id)}
+                              className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded-lg"
+                              disabled={deletingProductId === product.id}
+                            >
+                              {deletingProductId === product.id ? 'Deleting...' : 'Delete'}
+                            </button>
+                          </div>
+                        ) : (
+                          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl">
+                            Buy Now
                           </button>
-                          <button
-                            onClick={() => handleDeleteProduct(product.id)}
-                            className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded-lg"
-                            disabled={deletingProductId === product.id}
-                          >
-                            {deletingProductId === product.id ? 'Deleting...' : 'Delete'}
-                          </button>
-                        </div>
-                      ) : (
-                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl">
-                          Buy Now
-                        </button>
-                      )}
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))
-              )}
-            </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
-        {/* Edit Product Modal */}
+        {/* Edit Modal */}
         {editingProduct && (
           <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
             <div className="bg-white rounded-lg p-6 w-96 shadow-lg relative">
@@ -283,14 +311,14 @@ function DashboardPage() {
                   value={editingProduct.name}
                   onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
                   className="w-full p-2 border rounded-lg"
-                  placeholder="Product Name"
                   required
                 />
                 <textarea
                   value={editingProduct.description}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
+                  onChange={(e) =>
+                    setEditingProduct({ ...editingProduct, description: e.target.value })
+                  }
                   className="w-full p-2 border rounded-lg"
-                  placeholder="Description"
                   required
                 />
                 <input
@@ -298,12 +326,13 @@ function DashboardPage() {
                   value={editingProduct.price}
                   onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })}
                   className="w-full p-2 border rounded-lg"
-                  placeholder="Price"
                   required
                 />
                 <select
                   value={editingProduct.category}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
+                  onChange={(e) =>
+                    setEditingProduct({ ...editingProduct, category: e.target.value })
+                  }
                   className="w-full p-2 border rounded-lg"
                   required
                 >
@@ -314,7 +343,6 @@ function DashboardPage() {
                     </option>
                   ))}
                 </select>
-
                 <div className="flex justify-end gap-2 mt-4">
                   <button
                     type="button"
