@@ -11,6 +11,8 @@ import {
   deleteProduct
 } from '../api/products';
 import { fetchCurrentUser } from '../api/users';
+import { addToCart } from '../api/cart';
+
 
 function DashboardPage() {
   const { userId } = useParams();
@@ -287,8 +289,18 @@ function DashboardPage() {
                             </button>
                           </div>
                         ) : (
-                          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl">
-                            Buy Now
+                          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl"
+                            onClick={async () => {
+                                try {
+                                await addToCart(product.id);
+                                toast.success('Added to cart!');
+                                navigate('/cart'); // Go to cart page
+                                } catch (err) {
+                                toast.error('Failed to add to cart');
+                                }
+                            }}
+                            >
+                            Add to Cart
                           </button>
                         )}
                       </div>
