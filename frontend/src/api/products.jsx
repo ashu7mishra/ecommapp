@@ -5,7 +5,7 @@ const BASE_URL = 'http://127.0.0.1:8000'; // Backend running at this address
 
 export const fetchProducts = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/products/`);
+    const response = await axios.get(`${BASE_URL}/api/product/`);
     return response.data;
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -17,7 +17,7 @@ export const createProduct = async (productData) => {
   try {
     const token = localStorage.getItem('token');
     const response = await axios.post(
-      `${BASE_URL}/products/`,
+      `${BASE_URL}/api/product/`,
       productData,
       {
         headers: {
@@ -36,7 +36,7 @@ export const createProduct = async (productData) => {
 // ⭐ NEW: Fetch Categories
 export const fetchCategories = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/categories/`); // Assuming /categories/ endpoint
+    const response = await axios.get(`${BASE_URL}/api/category/`); // Assuming /categories/ endpoint
     return response.data;
   } catch (error) {
     console.error('Error fetching categories:', error);
@@ -50,7 +50,7 @@ export const updateProduct = async (id, productData) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        `${BASE_URL}/products/${id}/`,
+        `${BASE_URL}/api/product/${id}/`,
         productData,
         {
           headers: {
@@ -70,7 +70,7 @@ export const updateProduct = async (id, productData) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.delete(
-        `${BASE_URL}/products/${id}/`,
+        `${BASE_URL}/api/product/${id}/`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

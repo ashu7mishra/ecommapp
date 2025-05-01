@@ -10,6 +10,7 @@ import {
   updateProduct,
   deleteProduct
 } from '../api/products';
+import { fetchCurrentUser } from '../api/users';
 
 function DashboardPage() {
   const { userId } = useParams();
@@ -17,6 +18,7 @@ function DashboardPage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -37,10 +39,22 @@ function DashboardPage() {
     if (!token) {
       navigate('/login');
     } else {
+      loadUser();
       loadProducts();
-      if (isAdmin) loadCategories();
+      if (isAdmin) {
+        loadCategories();
+      }
     }
   }, [navigate, isAdmin]);
+
+  const loadUser = async () => {
+    try {
+      const userData = await fetchCurrentUser();
+      setUser(userData);
+    } catch (error) {
+      console.error('Failed to fetch user info:', error);
+    }
+  };
 
   const loadProducts = async () => {
     try {
@@ -131,6 +145,16 @@ function DashboardPage() {
       <Toaster position="top-right" reverseOrder={false} />
       <div className="flex-grow p-10">
         <h1 className="text-3xl font-bold text-blue-700 mb-6">Dashboard</h1>
+
+        {/* User Info */}
+        {user && (
+          <div className="mb-6 bg-white rounded-xl p-4 shadow-sm border">
+            <h2 className="text-xl font-semibold text-gray-700 mb-1">Welcome, {user.username}!</h2>
+            <p className="text-gray-500">Email: {user.email}</p>
+            <p className="text-gray-500">Role: {user.is_superuser ? 'Admin' : 'Customer'}</p>
+          </div>
+        )}
+
         <p className="text-gray-600 mb-10">
           Welcome to your dashboard. Here you can manage your orders, profile, and more!
         </p>
@@ -169,7 +193,6 @@ function DashboardPage() {
                   required
                 />
               </div>
-
               <div>
                 <label className="block mb-1 font-semibold">Category</label>
                 <select
