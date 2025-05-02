@@ -1,70 +1,160 @@
-# Getting Started with Create React App
+# EcommApp 🛒
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A scalable and modular e-commerce backend system built with Django REST Framework and React.js. This project simulates a real-world e-commerce workflow with features like user authentication, product browsing, cart management, order placement, payment integration (Razorpay), and inventory tracking.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🔍 Overview
 
-### `npm start`
+EcommApp is developed as a capstone project for Scaler Neovarsity’s Master’s Program in Computer Science. It demonstrates full-stack development, cloud deployment, and integration of third-party services like payment gateways and notification systems.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## ✨ Features
 
-### `npm test`
+### 🔐 User Management
+- User registration and login (token-based authentication)
+- Admin and customer roles
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 📦 Product & Category
+- CRUD for products and categories (admin only)
+- View and filter products by category (customer)
 
-### `npm run build`
+### 🛒 Cart & Orders
+- Add to cart, update quantity, remove items
+- Place order from cart
+- View order history
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 💳 Payments
+- Razorpay integration
+- Secure payment flow and status updates
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 🗃️ Inventory
+- Stock management
+- Stock deduction on order placement
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 🔔 Notifications
+- Email notifications on order confirmation
+- Configurable notification service
 
-### `npm run eject`
+### 📈 Admin Panel
+- Manage users, products, orders, and inventory
+- Dashboard interface (optional frontend)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🧰 Tech Stack
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+| Layer       | Technology                  |
+|-------------|------------------------------|
+| Frontend    | React.js                     |
+| Backend     | Django, Django REST Framework|
+| Database    | PostgreSQL                   |
+| Caching     | Redis                        |
+| Payments    | Razorpay                     |
+| Deployment  | Docker, AWS EC2/RDS/S3       |
+| Docs & Auth | Swagger, JWT                 |
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## ⚙️ Installation
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Prerequisites
+- Python 3.9+
+- Node.js 16+
+- PostgreSQL
+- Redis
+- Docker (optional but recommended)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Backend Setup
 
-### Code Splitting
+```bash
+# Clone the repository
+git clone https://github.com/ashu7mishra/ecommapp.git
+cd ecommapp/backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# Create virtual environment
+python -m venv env
+source env/bin/activate  # On Windows: env\Scripts\activate
 
-### Analyzing the Bundle Size
+# Install dependencies
+pip install -r requirements.txt
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# Apply migrations
+python manage.py migrate
 
-### Making a Progressive Web App
+# Create superuser
+python manage.py createsuperuser
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# Run the server
+python manage.py runserver
+```
 
-### Advanced Configuration
+### Frontend Setup
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```bash
+cd ../frontend
+npm install
+npm start
+```
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🔐 Environment Variables
 
-### `npm run build` fails to minify
+Create a `.env` file in the backend directory:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```env
+SECRET_KEY=your_django_secret
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+DATABASE_URL=postgres://user:password@localhost:5432/ecommapp
+RAZORPAY_KEY_ID=your_key_id
+RAZORPAY_KEY_SECRET=your_key_secret
+```
+
+---
+
+## 📦 API Documentation
+
+Swagger UI is available at:
+
+```
+http://localhost:8000/swagger/
+```
+
+---
+
+## 🧪 Testing
+
+Run backend tests:
+
+```bash
+python manage.py test
+```
+
+---
+
+## 🚀 Deployment
+
+Docker and AWS-based deployment supported.
+
+```bash
+docker-compose up --build
+```
+
+- EC2 for hosting Django + React
+- RDS for PostgreSQL
+- S3 for static/media files
+
+---
+
+## 📝 License
+
+MIT License. See [LICENSE](LICENSE) for more information.
+
+---
+
+## 🙌 Acknowledgements
+
+Developed as part of the Master’s Capstone Project at Scaler Neovarsity, under the mentorship of Naman Bhalla.
