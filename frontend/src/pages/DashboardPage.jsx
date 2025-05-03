@@ -13,9 +13,7 @@ import {
 import { fetchCurrentUser } from '../api/users';
 import { addToCart } from '../api/cart';
 
-
 function DashboardPage() {
-  // const { userId } = useParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -102,7 +100,10 @@ function DashboardPage() {
   };
 
   const handleEditProduct = (product) => {
-    setEditingProduct(product);
+    setEditingProduct({
+      ...product,
+      category: product.category?.id || product.category,
+    });
   };
 
   const handleUpdateProduct = async (e) => {
@@ -165,51 +166,42 @@ function DashboardPage() {
           <div className="bg-white shadow-md rounded-2xl p-6 mb-10">
             <h2 className="text-2xl font-bold text-green-700 mb-4">Add New Product</h2>
             <form onSubmit={handleAddProduct} className="space-y-4">
-              <div>
-                <label className="block mb-1 font-semibold">Name</label>
-                <input
-                  type="text"
-                  value={newProduct.name}
-                  onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                  className="w-full p-2 border rounded-lg"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-semibold">Description</label>
-                <textarea
-                  value={newProduct.description}
-                  onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                  className="w-full p-2 border rounded-lg"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-semibold">Price (₹)</label>
-                <input
-                  type="number"
-                  value={newProduct.price}
-                  onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-                  className="w-full p-2 border rounded-lg"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-semibold">Category</label>
-                <select
-                  value={newProduct.category}
-                  onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                  className="w-full p-2 border rounded-lg"
-                  required
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <input
+                type="text"
+                value={newProduct.name}
+                onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                placeholder="Name"
+                className="w-full p-2 border rounded-lg"
+                required
+              />
+              <textarea
+                value={newProduct.description}
+                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                placeholder="Description"
+                className="w-full p-2 border rounded-lg"
+                required
+              />
+              <input
+                type="number"
+                value={newProduct.price}
+                onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                placeholder="Price (₹)"
+                className="w-full p-2 border rounded-lg"
+                required
+              />
+              <select
+                value={newProduct.category}
+                onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                className="w-full p-2 border rounded-lg"
+                required
+              >
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
               <button
                 type="submit"
                 disabled={addingProduct}
@@ -221,7 +213,6 @@ function DashboardPage() {
           </div>
         )}
 
-        {/* Category Filter */}
         {categories.length > 0 && (
           <div className="mb-6">
             <label className="font-semibold text-gray-700 mr-2">Filter by Category:</label>
@@ -240,7 +231,6 @@ function DashboardPage() {
           </div>
         )}
 
-        {/* Product List */}
         {loading ? (
           <Spinner />
         ) : (
@@ -249,13 +239,11 @@ function DashboardPage() {
             {Object.entries(
               products
                 .filter((product) =>
-                  selectedCategory === 'All'
-                    ? true
-                    : product.category?.name === selectedCategory
+                  selectedCategory === 'All' ? true : product.category?.name === selectedCategory
                 )
                 .reduce((acc, product) => {
                   const category = product.category?.name || 'Uncategorized';
-                  if (!acc[category]) acc[category] = [];
+                  acc[category] = acc[category] || [];
                   acc[category].push(product);
                   return acc;
                 }, {})
@@ -289,17 +277,18 @@ function DashboardPage() {
                             </button>
                           </div>
                         ) : (
-                          <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl"
+                          <button
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl"
                             onClick={async () => {
-                                try {
+                              try {
                                 await addToCart(product.id);
                                 toast.success('Added to cart!');
-                                navigate('/cart'); // Go to cart page
-                                } catch (err) {
+                                navigate('/cart');
+                              } catch (err) {
                                 toast.error('Failed to add to cart');
-                                }
+                              }
                             }}
-                            >
+                          >
                             Add to Cart
                           </button>
                         )}
@@ -312,7 +301,6 @@ function DashboardPage() {
           </div>
         )}
 
-        {/* Edit Modal */}
         {editingProduct && (
           <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
             <div className="bg-white rounded-lg p-6 w-96 shadow-lg relative">
@@ -336,7 +324,9 @@ function DashboardPage() {
                 <input
                   type="number"
                   value={editingProduct.price}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })}
+                  onChange={(e) =>
+                    setEditingProduct({ ...editingProduct, price: e.target.value })
+                  }
                   className="w-full p-2 border rounded-lg"
                   required
                 />
