@@ -2,7 +2,7 @@
 import axios from './axios';
 
 export const addToCart = async (productId) => {
-  return await axios.post('/api/cart/items/', { product: productId, quantity: 1 });
+  return await axios.post('/api/cart/items/', { product_id: productId, quantity: 1 });
 };
 
 export const fetchCart = async () => {

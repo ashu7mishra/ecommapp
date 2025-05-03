@@ -6,7 +6,7 @@ from .models import Cart, CartItem
 
 class CartDetailView(generics.RetrieveAPIView):
     serializer_class = CartSerializer
-    permission_class = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_object(self):
         cart, created = Cart.objects.get_or_create(user=self.request.user)
@@ -14,7 +14,7 @@ class CartDetailView(generics.RetrieveAPIView):
     
 class CartItemAddView(generics.CreateAPIView):
     serializer_class = CartItemSerializer
-    permission_class = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     
     def perform_create(self, serializer):
         cart, created_at = Cart.objects.get_or_create(user=self.request.user)
@@ -22,7 +22,7 @@ class CartItemAddView(generics.CreateAPIView):
     
 class CartItemRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CartItemSerializer
-    permission_class = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
         cart, created_at = Cart.objects.get_or_create(user=self.request.user)

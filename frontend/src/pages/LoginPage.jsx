@@ -19,11 +19,14 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
+      // 1. Get access + refresh tokens
       const res = await axios.post('http://localhost:8000/api/token/', formData);
 
-      localStorage.setItem('token', res.data.access); // Save JWT token
-      
-      // Fetch user details now
+      // 2. Store tokens using keys expected by axios interceptor
+      localStorage.setItem('access', res.data.access);   // ✅ use 'access'
+      localStorage.setItem('refresh', res.data.refresh); // optional for refresh flow
+
+      // 3. Fetch user details
       const userRes = await axios.get('http://localhost:8000/api/self/', {
         headers: {
           Authorization: `Bearer ${res.data.access}`,
@@ -35,11 +38,10 @@ const Login = () => {
       localStorage.setItem('username', user.username);
 
       toast.success('Login successful! 🎉');
-      
+
       setTimeout(() => {
         navigate(`/dashboard/${user.id}`);
       }, 1000);
-
     } catch (err) {
       console.error(err);
       toast.error('Invalid credentials 😔');
