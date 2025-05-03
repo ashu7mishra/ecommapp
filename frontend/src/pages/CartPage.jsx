@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import { fetchCart, removeCartItem } from '../api/cart';
 import { toast } from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     loadCart();
@@ -17,9 +17,12 @@ function CartPage() {
     try {
       setLoading(true);
       const response = await fetchCart();
-      setCartItems(response.data);
+      console.log('Cart API response:', response.data); // Debugging line
+      const items = Array.isArray(response.data) ? response.data : [];
+      setCartItems(items);
     } catch (err) {
       toast.error('Failed to load cart');
+      setCartItems([]); // Ensure it's always an array
     } finally {
       setLoading(false);
     }
@@ -35,7 +38,13 @@ function CartPage() {
     }
   };
 
-  const total = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const total = Array.isArray(cartItems)
+    ? cartItems.reduce((sum, item) => {
+        const price = item?.product?.price ?? 0;
+        const qty = item?.quantity ?? 0;
+        return sum + price * qty;
+      }, 0)
+    : 0;
 
   return (
     <div className="p-6">
@@ -49,9 +58,9 @@ function CartPage() {
           {cartItems.map((item) => (
             <div key={item.id} className="border p-4 rounded-lg flex justify-between">
               <div>
-                <h2 className="font-semibold">{item.product.name}</h2>
-                <p>Price: ₹{item.product.price}</p>
-                <p>Quantity: {item.quantity}</p>
+                <h2 className="font-semibold">{item.product?.name ?? 'Unnamed Product'}</h2>
+                <p>Price: ₹{item.product?.price ?? 0}</p>
+                <p>Quantity: {item.quantity ?? 0}</p>
               </div>
               <button
                 onClick={() => handleRemove(item.id)}

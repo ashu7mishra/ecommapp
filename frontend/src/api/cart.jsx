@@ -1,14 +1,23 @@
 // src/api/cart.js
 import axios from './axios';
 
-export const addToCart = async (productId) => {
-  return await axios.post('/api/cart/items/', { product_id: productId, quantity: 1 });
+// Add item to the cart
+export const addToCart = async (productId, quantity = 1) => {
+  const response = await axios.post('/api/cart/items/', {
+    product_id: productId,
+    quantity,
+  });
+  return response.data;
 };
 
+// Fetch the full cart
 export const fetchCart = async () => {
-  return await axios.get('/api/cart/');
+  const response = await axios.get('/api/cart/');
+  return response.data;
 };
 
+// Remove an item from the cart
 export const removeCartItem = async (itemId) => {
-  return await axios.delete(`/api/cart/items/${itemId}/`);
+  const response = await axios.delete(`/api/cart/items/${itemId}/`);
+  return response.data;
 };

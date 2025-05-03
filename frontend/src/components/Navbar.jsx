@@ -4,10 +4,10 @@ import toast from 'react-hot-toast';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('access');
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('access');
     toast.success('Logged out successfully 👋');
     navigate('/login');
   };

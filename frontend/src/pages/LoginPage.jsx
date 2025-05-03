@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
+import api from '../api/axios';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,20 +20,16 @@ const Login = () => {
     setLoading(true);
     try {
       // 1. Get access + refresh tokens
-      const res = await axios.post('http://localhost:8000/api/token/', formData);
+      const res = await api.post('/api/token/', formData);
 
-      // 2. Store tokens using keys expected by axios interceptor
-      localStorage.setItem('access', res.data.access);   // ✅ use 'access'
-      localStorage.setItem('refresh', res.data.refresh); // optional for refresh flow
+      // 2. Store tokens for interceptor use
+      localStorage.setItem('access', res.data.access);
+      localStorage.setItem('refresh', res.data.refresh);
 
-      // 3. Fetch user details
-      const userRes = await axios.get('http://localhost:8000/api/self/', {
-        headers: {
-          Authorization: `Bearer ${res.data.access}`,
-        },
-      });
-
+      // 3. Fetch user details using interceptor-enabled instance
+      const userRes = await api.get('/api/self/');
       const user = userRes.data;
+
       localStorage.setItem('userId', user.id);
       localStorage.setItem('username', user.username);
 
@@ -41,6 +37,7 @@ const Login = () => {
 
       setTimeout(() => {
         navigate(`/dashboard/${user.id}`);
+        console.log(`/dashboard/${user.id}`)
       }, 1000);
     } catch (err) {
       console.error(err);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Spinner from '../components/Spinner';
 import {
@@ -15,7 +15,7 @@ import { addToCart } from '../api/cart';
 
 
 function DashboardPage() {
-  const { userId } = useParams();
+  // const { userId } = useParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -38,7 +38,7 @@ function DashboardPage() {
   const isAdmin = localStorage.getItem('is_superuser') === 'true';
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access');
     if (!token) {
       navigate('/login');
     } else {
