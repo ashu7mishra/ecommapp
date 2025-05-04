@@ -3,15 +3,16 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { ShoppingCart } from 'lucide-react';
-import { useCart } from '../context/CartContext'; // Make sure the path is correct
+import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem('access');
-  const { cartItems } = useCart();
+  const { cartItems, reloadCart } = useCart();
 
   const handleLogout = () => {
     localStorage.removeItem('access');
+    reloadCart(); // Refresh cart after logout
     toast.success('Logged out successfully 👋');
     navigate('/login');
   };

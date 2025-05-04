@@ -27,6 +27,18 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     loadCart();
+
+    const handleStorageChange = (e) => {
+      if (e.key === "access") {
+        loadCart();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   return (

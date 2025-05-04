@@ -1,10 +1,14 @@
+// src/pages/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import api from '../api/axios';
+import { useCart } from '../context/CartContext'; // 👈 import useCart
 
 const Login = () => {
   const navigate = useNavigate();
+  const { reloadCart } = useCart(); // 👈 get reloadCart from context
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -22,22 +26,24 @@ const Login = () => {
       // 1. Get access + refresh tokens
       const res = await api.post('/api/token/', formData);
 
-      // 2. Store tokens for interceptor use
+      // 2. Store tokens
       localStorage.setItem('access', res.data.access);
       localStorage.setItem('refresh', res.data.refresh);
 
-      // 3. Fetch user details using interceptor-enabled instance
+      // 3. Fetch user details
       const userRes = await api.get('/api/self/');
       const user = userRes.data;
 
       localStorage.setItem('userId', user.id);
       localStorage.setItem('username', user.username);
 
+      // 4. Reload cart immediately
+      await reloadCart(); // 👈 this makes cart update instantly after login
+
       toast.success('Login successful! 🎉');
 
       setTimeout(() => {
         navigate(`/dashboard/${user.id}`);
-        console.log(`/dashboard/${user.id}`)
       }, 1000);
     } catch (err) {
       console.error(err);
