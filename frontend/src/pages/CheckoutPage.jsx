@@ -77,7 +77,7 @@ const CheckoutPage = () => {
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-2">Shipping Address</h2>
             {addresses.map((addr) => (
-              <div key={addr.id} className="mb-1">
+              <div key={addr.id} className="mb-2">
                 <label className="flex items-center gap-2">
                   <input
                     type="radio"
@@ -86,7 +86,9 @@ const CheckoutPage = () => {
                     checked={selectedAddress === addr.id}
                     onChange={() => setSelectedAddress(addr.id)}
                   />
-                  {addr.full_address}
+                   <span>
+		        {addr.street}, {addr.city}, {addr.state} - {addr.postal_code}
+		   </span>
                 </label>
               </div>
             ))}
