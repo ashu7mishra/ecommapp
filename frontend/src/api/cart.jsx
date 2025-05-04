@@ -21,3 +21,9 @@ export const removeCartItem = async (itemId) => {
   const response = await axios.delete(`/api/cart/items/${itemId}/`);
   return response.data;
 };
+
+// ✅ Update quantity or other fields for a cart item
+export const updateCartItem = async (itemId, data) => {
+  const response = await axios.put(`/api/cart/items/${itemId}/`, data);
+  return response.data;
+};

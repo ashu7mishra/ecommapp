@@ -12,6 +12,7 @@ import {
 } from '../api/products';
 import { fetchCurrentUser } from '../api/users';
 import { addToCart } from '../api/cart';
+import { useCart } from '../context/CartContext';
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ function DashboardPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const { cartItems, reloadCart } = useCart();
 
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -283,7 +285,8 @@ function DashboardPage() {
                               try {
                                 await addToCart(product.id);
                                 toast.success('Added to cart!');
-                                navigate('/cart');
+                                // navigate('/cart');
+                                reloadCart();
                               } catch (err) {
                                 toast.error('Failed to add to cart');
                               }
