@@ -1,6 +1,7 @@
 import axios from "./axios";
 
 export const placeOrder = async (data) => {
+  console.log(data);
   const res = await axios.post("/api/order/", data);
   return res.data;
 };
