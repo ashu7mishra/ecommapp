@@ -8,5 +8,6 @@ export const placeOrder = async (data) => {
 
 export const fetchOrders = async () => {
   const res = await axios.get("/api/order/");
+  console.log(res.data);
   return res.data;
 };

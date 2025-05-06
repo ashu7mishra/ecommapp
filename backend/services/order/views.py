@@ -1,50 +1,12 @@
-# from django.shortcuts import render
-# from rest_framework import generics, permissions, status
-# from .models import Order, OrderItem
-# from .serializers import OrderItemSerializer, OrderSerializer
-# from ..cart.models import CartItem
-
-
-# class OrderListCreateAPIView(generics.ListCreateAPIView):
-#     serializer_class = OrderSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-    
-#     def get_queryset(self):
-#         return Order.objects.filter(user=self.request.user)
-    
-#     def perform_create(self, serializer):
-#         user = self.request.user
-#         cart_items = CartItem.objects.filter(user=user)
-        
-#         if not cart_items.exists():
-#             raise serializer.ValidationError('Cart is Empty')
-        
-#         order = serializer.save(user=user, total_amount=0)
-#         total_amount = 0
-        
-#         for item in cart_items:
-#             price = item.product.price
-#             OrderItem.objects.create(
-#                 order = order,
-#                 product = item.product,
-#                 quantity = item.quantity,
-#                 price = price
-#             )
-#             total_amount += price*item.quantity
-#             item.delete()
-            
-#         order.total_amount = total_amount
-#         order.save()
-
-
 from django.shortcuts import render
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from .models import Order, OrderItem
 from .serializers import OrderItemSerializer, OrderSerializer
-from ..cart.models import CartItem, Cart
-from ..product.models import Product  # Update path as per your app structure
+from ..cart.models import CartItem
+from ..product.models import Product
+from ..address.models import Address
 
 class OrderListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
@@ -61,10 +23,14 @@ class OrderListCreateAPIView(generics.ListCreateAPIView):
             raise ValidationError('Cart is empty')
 
         address_id = request.data.get("address_id")
-        payment_method = request.data.get("payment_method", "COD")
-
         if not address_id:
-            raise ValidationError("Address ID is required.")
+            try:
+                address = Address.objects.get(user=user, is_default=True)
+                address_id = address.id
+            except Address.DoesNotExist as e:
+                raise ValidationError("No default address found. Please provide an address_id.") from e
+
+        payment_method = request.data.get("payment_method", "COD")
 
         order = Order.objects.create(
             user=user,
@@ -80,11 +46,9 @@ class OrderListCreateAPIView(generics.ListCreateAPIView):
             if product.inventory < item.quantity:
                 raise ValidationError(f"Insufficient inventory for {product.name}")
 
-            # Reduce inventory
             product.inventory -= item.quantity
             product.save()
 
-            # Create order item
             OrderItem.objects.create(
                 order=order,
                 product=product,
@@ -97,7 +61,6 @@ class OrderListCreateAPIView(generics.ListCreateAPIView):
         order.total_amount = total_amount
         order.save()
 
-        # Clear the cart
         cart_items.delete()
 
         serializer = self.get_serializer(order)
