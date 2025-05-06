@@ -45,11 +45,11 @@ class OrderListCreateAPIView(generics.ListCreateAPIView):
 
         for item in cart_items:
             product = item.product
-            if product.inventory < item.quantity:
+            if product.inventory.quantity < item.quantity:
                 raise ValidationError(f"Insufficient inventory for {product.name}")
 
-            product.inventory -= item.quantity
-            product.save()
+            product.inventory.quantity -= item.quantity
+            product.inventory.save()
 
             OrderItem.objects.create(
                 order=order,
