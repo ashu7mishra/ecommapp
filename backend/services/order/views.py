@@ -17,7 +17,9 @@ class OrderListCreateAPIView(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         user = request.user
-        cart_items = CartItem.objects.filter(user=user).select_related('product')
+
+        # 🔧 Fixed here
+        cart_items = CartItem.objects.filter(cart__user=user).select_related('product')
 
         if not cart_items.exists():
             raise ValidationError('Cart is empty')
