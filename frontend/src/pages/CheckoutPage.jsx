@@ -59,7 +59,8 @@ const CheckoutPage = () => {
         payment_method: paymentMethod,
       });
       toast.success("Order placed successfully!");
-      navigate("/orders");
+      const userId = localStorage.getItem('userId');
+      navigate(`/dashboard/${userId}`);
     } catch (err) {
       toast.error("Order failed");
     }
