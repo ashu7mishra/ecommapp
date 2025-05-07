@@ -11,6 +11,7 @@ class Order(models.Model):
     payment_method = models.CharField(max_length=50, default='COD')  # ✅ Payment method field
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # ✅ Total amount field
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20, choices=[
         ('pending', 'Pending'),
         ('confirm', 'Confirm'),
