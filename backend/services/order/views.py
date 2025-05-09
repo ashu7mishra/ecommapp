@@ -7,6 +7,7 @@ from .serializers import OrderItemSerializer, OrderSerializer
 from ..cart.models import CartItem
 from ..product.models import Product
 from ..address.models import Address
+from .kafka_utils import send_notification_event
 
 class OrderListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
@@ -66,4 +67,13 @@ class OrderListCreateAPIView(generics.ListCreateAPIView):
         cart_items.delete()
 
         serializer = self.get_serializer(order)
+        
+        send_notification_event("order_placed", {
+            "user_id": request.user.id,
+            "order_id": order.id,
+            "message": "Your order has been placed successfully."
+        })
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+
