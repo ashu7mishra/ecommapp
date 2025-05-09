@@ -202,4 +202,34 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 
+KAFKA_BOOTSTRAP_SERVERS = ['localhost:9092']
+KAFKA_NOTIFICATION_TOPIC = 'notifications'
 
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+os.makedirs(LOG_DIR, exist_ok=True)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file_notifications': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'notifications.log'),
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'notifications': {
+            'handlers': ['file_notifications'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    }
+}
