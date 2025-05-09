@@ -3,12 +3,15 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import NotFound
+import logging
 
 User = get_user_model()
+
+# Get logger
+logger = logging.getLogger('notifications')  # Assuming this is your configured logger in settings.py
 
 class UserListCreateAPIView(ListCreateAPIView):
     serializer_class = UserSerializer
@@ -21,33 +24,35 @@ class UserListCreateAPIView(ListCreateAPIView):
         return User.objects.filter(id=user.id)
     
     def perform_create(self, serializer):
-        serializer.save()
-        
-        
+        user = serializer.save()
+        logger.info(f"New user registered: {user.username} (ID: {user.id})")
+
 class UserRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
     
     def get_object(self):
-        
         user_id = self.kwargs.get('id')
         if user_id:
             try:
-                # Retrieve user by ID from the URL
-                return User.objects.get(id=user_id)
+                user = User.objects.get(id=user_id)
+                return user
             except User.DoesNotExist:
+                logger.warning(f"User fetch failed: No user with ID {user_id}")
                 raise NotFound(detail="User not found")
-            # Return the current authenticated user
         return self.request.user
     
     def delete(self, request, *args, **kwargs):
-        
         confirm = request.data.get('confirm', False)
-        
-        if not confirm:
-            raise ValidationError({"detail": "Please confirm account deletion by setting 'confirm': true."})
-        
-        self.request.user.delete()
-        return Response({"detail": "Account deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
-    
+        if not confirm:
+            logger.warning(f"User deletion attempt without confirmation by user ID {request.user.id}")
+            raise ValidationError({"detail": "Please confirm account deletion by setting 'confirm': true."})
+
+        user = self.request.user
+        username = user.username
+        user_id = user.id
+        user.delete()
+        logger.info(f"User deleted: {username} (ID: {user_id})")
+
+        return Response({"detail": "Account deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
