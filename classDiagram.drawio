@@ -5,16 +5,43 @@
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="Akx1WM13JKXArrnDoVVp-2" value="User" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
-          <mxGeometry x="50" y="40" width="130" height="100" as="geometry" />
+          <mxGeometry x="40" y="40" width="130" height="100" as="geometry" />
         </mxCell>
         <mxCell id="Akx1WM13JKXArrnDoVVp-5" value="&lt;div&gt;- id: int&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/div&gt;&lt;div&gt;- username: str&lt;/div&gt;&lt;div&gt;- email: str&lt;/div&gt;&lt;div&gt;- is_verified: bool&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Akx1WM13JKXArrnDoVVp-2">
           <mxGeometry x="10" y="30" width="110" height="70" as="geometry" />
         </mxCell>
         <mxCell id="Akx1WM13JKXArrnDoVVp-6" value="Address" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
-          <mxGeometry x="50" y="170" width="130" height="140" as="geometry" />
+          <mxGeometry x="40" y="230" width="130" height="140" as="geometry" />
         </mxCell>
         <mxCell id="Akx1WM13JKXArrnDoVVp-7" value="&lt;div&gt;- id: int&lt;/div&gt;&lt;div&gt;- street: str&lt;/div&gt;&lt;div&gt;- city: str&lt;/div&gt;&lt;div&gt;- state: str&lt;/div&gt;&lt;div&gt;- pincode: str&lt;/div&gt;&lt;div&gt;- is_default: bool&lt;/div&gt;&lt;div&gt;- user: FK&amp;lt;User&amp;gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Akx1WM13JKXArrnDoVVp-6">
           <mxGeometry x="2" y="25" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-8" value="Cart" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="230" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-9" value="&lt;div&gt;- id: int&lt;/div&gt;&lt;div&gt;- user: FK&amp;lt;User&amp;gt;&amp;nbsp;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Akx1WM13JKXArrnDoVVp-8">
+          <mxGeometry x="10" y="30" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-14" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="102" y="141.02999999999997" width="230" height="87.97000000000003" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-11" value="" style="endArrow=none;html=1;rounded=0;entryX=0.473;entryY=1.029;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="Akx1WM13JKXArrnDoVVp-14">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint y="37.97000000000003" as="sourcePoint" />
+            <mxPoint x="0.029999999999972715" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-12" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="Akx1WM13JKXArrnDoVVp-14">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint y="37.97000000000003" as="sourcePoint" />
+            <mxPoint x="230" y="37.97000000000003" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-13" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="Akx1WM13JKXArrnDoVVp-14">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="229" y="37.97000000000003" as="sourcePoint" />
+            <mxPoint x="229" y="87.97000000000003" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
