@@ -43,6 +43,57 @@
             <mxPoint x="229" y="87.97000000000003" as="targetPoint" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-15" value="CartItem" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="261" y="360" width="140" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-16" value="&lt;div&gt;- id: int&lt;/div&gt;&lt;div&gt;- cart: FK&amp;lt;Cart&amp;gt;&lt;/div&gt;&lt;div&gt;- product: FK&amp;lt;Product&amp;gt;&lt;/div&gt;&lt;div&gt;- quantity: int&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Akx1WM13JKXArrnDoVVp-15">
+          <mxGeometry x="10" y="30" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-17" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Akx1WM13JKXArrnDoVVp-8" target="Akx1WM13JKXArrnDoVVp-15">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="350" as="sourcePoint" />
+            <mxPoint x="450" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-18" value="Product" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
+          <mxGeometry x="40" y="490" width="162" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-19" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- id: int&lt;/div&gt;&lt;div&gt;- name: str&lt;/div&gt;&lt;div&gt;- description: str&lt;/div&gt;&lt;div&gt;- price: float&lt;/div&gt;&lt;div&gt;- stock: int&lt;/div&gt;&lt;div&gt;- category: FK&amp;lt;Category&amp;gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Akx1WM13JKXArrnDoVVp-18">
+          <mxGeometry x="2" y="11" width="160" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-20" value="Category" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
+          <mxGeometry x="250" y="496" width="130" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-22" value="&lt;div&gt;- id: int&lt;/div&gt;&lt;div&gt;- name: str&lt;/div&gt;&lt;div&gt;- parent: FK&amp;lt;Category&amp;gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Akx1WM13JKXArrnDoVVp-20">
+          <mxGeometry x="1" y="30" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Akx1WM13JKXArrnDoVVp-22" target="Akx1WM13JKXArrnDoVVp-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-24" value="Inventory" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
+          <mxGeometry x="245" y="620" width="135" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-26" value="&lt;div&gt;- id: int&lt;/div&gt;&lt;div&gt;- product: FK&amp;lt;Product&amp;gt;&lt;/div&gt;&lt;div&gt;- quantity: int&lt;/div&gt;&lt;div&gt;- threshold: int&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Akx1WM13JKXArrnDoVVp-24">
+          <mxGeometry y="25" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-27" value="Order" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
+          <mxGeometry x="42" y="750" width="162" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-32" value="&lt;div&gt;- id: int&lt;/div&gt;&lt;div&gt;- user: FK&amp;lt;User&amp;gt;&lt;/div&gt;&lt;div&gt;- address: FK&amp;lt;Address&amp;gt;&lt;/div&gt;&lt;div&gt;- status: str&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Akx1WM13JKXArrnDoVVp-27">
+          <mxGeometry x="4" y="26" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-29" value="OrderItem" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
+          <mxGeometry x="252" y="756" width="154" height="114" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-33" value="&lt;div&gt;- id: int&lt;/div&gt;&lt;div&gt;- order: FK&amp;lt;Order&amp;gt;&lt;/div&gt;&lt;div&gt;- product: FK&amp;lt;Product&amp;gt;&lt;/div&gt;&lt;div&gt;- quantity: int&amp;nbsp;&lt;/div&gt;&lt;div&gt;- price: float&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Akx1WM13JKXArrnDoVVp-29">
+          <mxGeometry x="1" y="24" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Akx1WM13JKXArrnDoVVp-31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="253" y="816" as="sourcePoint" />
+            <mxPoint x="204" y="816" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
