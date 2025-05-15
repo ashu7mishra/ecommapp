@@ -58,9 +58,16 @@ const CheckoutPage = () => {
         address_id: selectedAddress,
         payment_method: paymentMethod,
       });
+      setCartItems([]);
       toast.success("Order placed successfully!");
-      const userId = localStorage.getItem('userId');
+      
+      // Re-fetch cart from backend to ensure it’s cleared
+      const cartRes = await fetchCart();
+      setCartItems(cartRes.items || []);
+
+      const userId = localStorage.getItem("userId");
       navigate(`/dashboard/${userId}`);
+      
     } catch (err) {
       toast.error("Order failed");
     }
@@ -94,32 +101,49 @@ const CheckoutPage = () => {
   };
 
   const total = cartItems.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item) => sum + parseFloat(item.product?.price || 0) * item.quantity,
     0
   );
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Checkout</h1>
+    <div className="max-w-3xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+
       {loading ? (
         <p>Loading...</p>
       ) : (
         <>
           {/* Cart Summary */}
           <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">Cart Summary</h2>
-            {cartItems.map((item) => (
-              <div key={item.id} className="border p-2 mb-2 rounded">
-                {item.product.name} × {item.quantity} — ₹{item.product.price}
-              </div>
-            ))}
-            <div className="font-bold mt-2">Total: ₹{total}</div>
+            <h2 className="text-xl font-semibold mb-3">Cart Summary</h2>
+            {cartItems.length === 0 ? (
+              <p className="text-red-500">Your cart is empty.</p>
+            ) : (
+              <>
+                {cartItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between border p-3 mb-2 rounded"
+                  >
+                    <span>
+                      {item.product?.name} × {item.quantity}
+                    </span>
+                    <span>
+                      ₹{parseFloat(item.product?.price || 0).toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+                <div className="font-bold text-lg mt-2">
+                  Total: ₹{total.toFixed(2)}
+                </div>
+              </>
+            )}
           </div>
 
-          {/* Address Selection */}
+          {/* Shipping Address */}
           <div className="mb-6">
             <div className="flex justify-between items-center mb-2">
-              <h2 className="text-lg font-semibold">Shipping Address</h2>
+              <h2 className="text-xl font-semibold">Shipping Address</h2>
               <button
                 className="text-blue-600 text-sm"
                 onClick={() => setShowAddressForm((s) => !s)}
@@ -143,12 +167,12 @@ const CheckoutPage = () => {
                     />
                     <span>
                       {addr.street}, {addr.city}, {addr.state} - {addr.pincode}
+                      {addr.is_default && (
+                        <span className="text-green-600 text-sm ml-2">
+                          (Default)
+                        </span>
+                      )}
                     </span>
-                    {addr.is_default && (
-                      <span className="text-green-600 text-sm ml-2">
-                        (Default)
-                      </span>
-                    )}
                   </label>
                 </div>
               ))
@@ -156,46 +180,21 @@ const CheckoutPage = () => {
 
             {showAddressForm && (
               <div className="border p-4 mt-4 rounded bg-gray-100 space-y-2">
-                <input
-                  type="text"
-                  name="street"
-                  placeholder="Street"
-                  value={addressForm.street}
-                  onChange={handleAddressFormChange}
-                  className="w-full p-2 border rounded"
-                />
-                <input
-                  type="text"
-                  name="city"
-                  placeholder="City"
-                  value={addressForm.city}
-                  onChange={handleAddressFormChange}
-                  className="w-full p-2 border rounded"
-                />
-                <input
-                  type="text"
-                  name="state"
-                  placeholder="State"
-                  value={addressForm.state}
-                  onChange={handleAddressFormChange}
-                  className="w-full p-2 border rounded"
-                />
-                <input
-                  type="text"
-                  name="pincode"
-                  placeholder="Pincode"
-                  value={addressForm.pincode}
-                  onChange={handleAddressFormChange}
-                  className="w-full p-2 border rounded"
-                />
-                <input
-                  type="text"
-                  name="country"
-                  placeholder="Country"
-                  value={addressForm.country}
-                  onChange={handleAddressFormChange}
-                  className="w-full p-2 border rounded"
-                />
+                {["street", "city", "state", "pincode", "country"].map(
+                  (field) => (
+                    <input
+                      key={field}
+                      type="text"
+                      name={field}
+                      placeholder={
+                        field.charAt(0).toUpperCase() + field.slice(1)
+                      }
+                      value={addressForm[field]}
+                      onChange={handleAddressFormChange}
+                      className="w-full p-2 border rounded"
+                    />
+                  )
+                )}
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -217,7 +216,7 @@ const CheckoutPage = () => {
 
           {/* Payment Method */}
           <div className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">Payment Method</h2>
+            <h2 className="text-xl font-semibold mb-2">Payment Method</h2>
             <label className="flex items-center gap-2">
               <input
                 type="radio"
@@ -230,10 +229,11 @@ const CheckoutPage = () => {
             </label>
           </div>
 
+          {/* Place Order */}
           <button
-            className="bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+            className="bg-green-600 text-white px-6 py-2 rounded disabled:bg-gray-400"
             onClick={handlePlaceOrder}
-            disabled={!selectedAddress}
+            disabled={!selectedAddress || cartItems.length === 0}
           >
             Place Order
           </button>
