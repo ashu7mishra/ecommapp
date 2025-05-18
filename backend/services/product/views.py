@@ -7,9 +7,13 @@ from rest_framework.views import APIView
 from ..category.models import Category
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.cache import cache
 
 class ProductListCreateAPIView(ListCreateAPIView):
-    queryset = Product.objects.all()
+    products = cache.get('all_products')
+    if not products:
+        queryset = Product.objects.all()
+        cache.set('all_products', products, timeout=300)  # Cache for 5 minutes
     serializer_class = ProductSerializer
     permission_classes = [IsAdminOrReadOnly]
 
