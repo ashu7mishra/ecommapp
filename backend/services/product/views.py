@@ -34,3 +34,4 @@ class ProductsByCategoryView(APIView):
         except Category.DoesNotExist:
             return Response({"detail": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
         
+        
